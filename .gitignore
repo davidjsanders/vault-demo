@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# PyCharm exceptions - D Sanders, 15 Oct 2016
+.idea/*.xml
+
 # C extensions
 *.so
 
