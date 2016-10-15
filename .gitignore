@@ -7,6 +7,7 @@ __pycache__/
 .idea
 .idea/*.xml
 .idea/*.iml
+*.json
 
 # C extensions
 *.so
