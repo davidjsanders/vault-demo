@@ -9,10 +9,10 @@ vault = None
 try:
     f = open('authentication_file.json', 'r')
     _auth_dict = json.load(f)
-    if 'wrapped' in _auth_dict:
-        wrapped = _auth_dict['wrapped']
-    elif 'auth' in _auth_dict:
+    if 'auth' in _auth_dict:
         auth = _auth_dict['auth']
+    elif 'wrapped' in _auth_dict:
+        wrapped = _auth_dict['wrapped']
     f.close()
 except Exception as e:
     Logger.log('Exception! {0}'.format(repr(e)))
