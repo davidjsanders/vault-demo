@@ -1,7 +1,4 @@
 import json, hvac, requests.exceptions, argparse
-
-from django.contrib.gis.gdal.prototypes.srs import destroy_ct
-
 from packages.VaultServer import VaultServer
 from packages.Logger import Logger
 
