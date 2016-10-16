@@ -5,6 +5,7 @@ from packages.Logger import Logger
 wrapped = None
 auth = None
 vault = None
+log = Logger()
 
 parser = argparse.ArgumentParser(description='Process optional tokens')
 parser.add_argument(
@@ -103,21 +104,21 @@ vault = VaultServer(name=_server, port=_port)
 try:
     vault.authenticate(wrapped_token=_wrapped)
 except requests.ConnectionError as ce:
-    Logger.log('A connection error occurred; is the vault server information correct?')
+    log.log('A connection error occurred; is the vault server information correct?')
     exit(1)
 except hvac.exceptions.Forbidden:
     exit(1)
 except Exception as e:
-    Logger.log('Exception! {0}'.format(repr(e)))
+    log.log('Exception! {0}'.format(repr(e)))
     exit(1)
 
 try:
     foo = vault.read_kv_secret(secret='foo')
     print('foo: {0}'.format(foo))
 except ValueError as ve:
-    Logger.log(ve)
+    log.log(ve)
 except hvac.exceptions.Forbidden as f:
-    Logger.log(
+    log.log(
         'Unable to read secret. '+
             'Token {0} returns permission denied!'.format(
                 vault.accessor if vault.accessor is not None else 'is null, so'

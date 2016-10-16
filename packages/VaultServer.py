@@ -15,6 +15,7 @@ class VaultServer:
     _token = None
     _accessor = None
     _wrapped_token = None
+    _log = Logger()
 
     def __init__(
         self,
@@ -106,10 +107,10 @@ class VaultServer:
             try:
                 temp_unwrap = self.client.unwrap('{0}'.format(wrapped_token))
             except hvac.exceptions.Forbidden as f:
-                Logger.log(
-                    'Unable to unwrap Token!! Token: {0}. Error: {1}.'.format(wrapped_token, str(f)),
-                    security_related=True
-                )
+                # Logger.log(
+                #     'Unable to unwrap Token!! Token: {0}. Error: {1}.'.format(wrapped_token, str(f)),
+                #     security_related=True
+                # )
                 raise
 
             if temp_unwrap is None:
@@ -120,7 +121,7 @@ class VaultServer:
         _token = _auth.get('client_token', None)
         self._accessor = _auth.get('accessor', None)
         if _auth is None or _token is None:
-            Logger.log(temp_unwrap, security_related=True)
+            # Logger.log(temp_unwrap, security_related=True)
             raise ValueError('The unwrapped value is not an authentication token.')
 
         try:
