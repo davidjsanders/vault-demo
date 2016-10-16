@@ -13,6 +13,12 @@ parser.add_argument(
     default=None,
     help='Pass the Vault wrapped authentication token via the command line.'
 )
+parser.add_argument(
+    '--auth-file',
+    dest='auth_file',
+    default=None,
+    help='Pass the filename of a JSON file containing authentication tokens (wrapped or unwrapped).'
+)
 args = parser.parse_args()
 
 try:
