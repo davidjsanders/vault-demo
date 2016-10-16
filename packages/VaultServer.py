@@ -101,7 +101,6 @@ class VaultServer:
 
         if token is not None:
             _auth = {"client_token":token}
-            _accessor = {"accessor"}
         else:
             temp_unwrap = None
             try:
@@ -119,6 +118,7 @@ class VaultServer:
             _auth = temp_unwrap.get('auth', None)
 
         _token = _auth.get('client_token', None)
+        self._accessor = _auth.get('accessor', None)
         if _auth is None or _token is None:
             Logger.log(temp_unwrap, security_related=True)
             raise ValueError('The unwrapped value is not an authentication token.')
