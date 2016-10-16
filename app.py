@@ -1,4 +1,7 @@
-import json, hvac, requests.exceptions
+import json, hvac, requests.exceptions, argparse
+
+from django.contrib.gis.gdal.prototypes.srs import destroy_ct
+
 from packages.VaultServer import VaultServer
 from packages.Logger import Logger
 
@@ -6,14 +9,27 @@ wrapped = None
 auth = None
 vault = None
 
+parser = argparse.ArgumentParser(description='Process optional tokens')
+parser.add_argument(
+    '--token',
+    dest='token',
+    default=None,
+    help='Pass the Vault authentication token via the command line.'
+)
+args = parser.parse_args()
+
 try:
-    f = open('authentication_file.json', 'r')
-    _auth_dict = json.load(f)
-    if 'auth' in _auth_dict:
-        auth = _auth_dict['auth']
-    elif 'wrapped' in _auth_dict:
-        wrapped = _auth_dict['wrapped']
-    f.close()
+    if args.token is None:
+        f = open('authentication_file.json', 'r')
+        _auth_dict = json.load(f)
+        if 'auth' in _auth_dict:
+            auth = _auth_dict['auth']
+        elif 'wrapped' in _auth_dict:
+            wrapped = _auth_dict['wrapped']
+        f.close()
+    else:
+        auth = args.token
+        wrapped = None
 except Exception as e:
     Logger.log('Exception! {0}'.format(repr(e)))
     exit(1)
