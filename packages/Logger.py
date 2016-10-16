@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 import time
-import os
+import logging
 
 
 class Logger(object):
@@ -12,6 +12,11 @@ class Logger(object):
             self._filename = filename
         if log_directory is not None:
             self._log_directory = log_directory
+        logging.basicConfig(
+            filename=self._filename,
+            level=logging.INFO,
+            format='%(asctime)s %(message)s'
+        )
 
     def log(self, text, security_related=False):
         if security_related:
@@ -19,7 +24,7 @@ class Logger(object):
         else:
             output_text = 'LOG: {0}'.format(text)
             print(output_text)
-            self._file_writer(output_text)
+            logging.warning(output_text)
 
     def security_log(self, text):
         event_time = datetime.utcnow()
@@ -31,9 +36,10 @@ class Logger(object):
             "** SECURITY LOG Message : {0}".format(text) + "\n" + \
             "**"
         print(output_text)
-        self._file_writer(output_text)
+        logging.critical(output_text)
 
     def _file_writer(self, text=None):
+
         f = None
         try:
             f = open(Logger._log_directory + '/' + self._filename, 'a')
