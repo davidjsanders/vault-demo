@@ -1,11 +1,18 @@
-import json, hvac, requests.exceptions, argparse
+import json
+import hvac
+import requests.exceptions
+import argparse
+import logging
 from packages.VaultServer import VaultServer
-from packages.Logger import Logger
 
 wrapped = None
 auth = None
 vault = None
-log = Logger()
+logging.basicConfig(
+    filename='vault-demo.log',
+    level=logging.INFO,
+    format='%(asctime)s %(message)s'
+)
 
 parser = argparse.ArgumentParser(description='Process optional tokens')
 parser.add_argument(
@@ -39,22 +46,6 @@ _server = args.server
 _port = args.port
 _auth_file = args.auth_file
 
-# Check if a wrapped token has been passed as a parameter
-if _wrapped is not None and not isinstance(_wrapped, str):
-    raise TypeError('Wrapped token is not the correct type (str)!')
-
-# Check if a server name has been passed as a parameter
-if _server is not None:
-    _success = False
-    if not isinstance(_server, str):
-        raise ValueError(
-            'Server, if provided, must be a string. '+
-            '{0} is not a string.'.format(_server)
-        )
-#    if _server[0:7].lower() != "http://":
-#        _server = 'http://'+_server
-#        Logger.log('Server set to {0}'.format(_server))
-
 # Check if a port number has been passed as a parameter
 if _port is not None:
     _success = False
@@ -65,10 +56,12 @@ if _port is not None:
         _success = False
 
     if not _success:
-        raise ValueError(
-            'Port number, if provided, must be an integer. '+
+        _error_text = 'ERROR: app.py: _port: ' + \
+            'Port number, if provided, must be an integer. '+ \
             '{0} is not an int'.format(_port)
-        )
+
+        logging.error(_error_text)
+        raise ValueError(_error_text)
 
     if _port < 1:
         raise ValueError('Port number, if provided, must be greater than zero or None.')
@@ -86,42 +79,48 @@ if _auth_file is not None:
         _success = False
 
     if not _success:
-        raise FileNotFoundError(
+        fnf_error = FileNotFoundError(
             '{0} was not found - is the spelling correct?'.format(_auth_file)
         )
+        logging.error('ERROR: authentication_file: {0}'.format(str(fnf_error)))
+        raise fnf_error
     t_auth = json.load(_auth_file_handle)
     _auth_file_handle.close()
 
     _wrapped = t_auth.get('wrapped-token', None)
     if _wrapped is None:
-        raise ValueError(
-            'Authentication file did not contain a wrap token. ' +
+        _error_text = 'ERROR: authentication_file: ' + \
+            'Authentication file did not contain a wrap token. ' + \
             'Key MUST be "wrapped-token":{value}'
-        )
+
+        logging.error(_error_text)
+        raise ValueError(_error_text)
 
 vault = VaultServer(name=_server, port=_port)
 
 try:
     vault.authenticate(wrapped_token=_wrapped)
 except requests.ConnectionError as ce:
-    log.log('A connection error occurred; is the vault server information correct?')
-    exit(1)
+    logging.error('A connection error occurred; is the vault server information correct?')
+    raise
 except hvac.exceptions.Forbidden:
-    exit(1)
+    logging.error('** SECURITY LOG ** The authentication request was forbidden.')
+    raise
 except Exception as e:
-    log.log('Exception! {0}'.format(repr(e)))
-    exit(1)
+    logging.error('Exception! {0}'.format(repr(e)))
+    raise
 
 try:
     foo = vault.read_kv_secret(secret='foo')
     print('foo: {0}'.format(foo))
 except ValueError as ve:
-    log.log(ve)
+    logging.error(ve)
+    raise
 except hvac.exceptions.Forbidden as f:
-    log.log(
-        'Unable to read secret. '+
-            'Token {0} returns permission denied!'.format(
+    _error_text = 'ERROR: app.py: foo: ' + \
+        'Unable to read secret. '+ \
+        'Token {0} returns permission denied!'.format(
                 vault.accessor if vault.accessor is not None else 'is null, so'
-            ),
-        security_related=True
-    )
+        )
+    logging.error(_error_text)
+    raise

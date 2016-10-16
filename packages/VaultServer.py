@@ -1,4 +1,5 @@
 import hvac
+import logging
 from packages.Logger import Logger
 
 
@@ -15,7 +16,6 @@ class VaultServer:
     _token = None
     _accessor = None
     _wrapped_token = None
-    _log = Logger()
 
     def __init__(
         self,
@@ -76,24 +76,34 @@ class VaultServer:
     @client.setter
     def client(self, new_value=None):
         if new_value is not None and not isinstance(new_value, hvac.Client):
-            raise TypeError('The client must be an instance of hvac.Client.')
+            _error_text = 'The client must be an instance of hvac.Client.'
+            logging.error('ERROR: VaultServer.py: @client.setter: {0}'.format(_error_text))
+            raise TypeError(_error_text)
         self._client = new_value
 
     def read_kv_secret(self, secret=None):
         if secret is None:
-            raise ValueError('Secret name must be provided.')
+            _error_text = 'Secret name must be provided.'
+            logging.error('ERROR: VaultServer.py: read_kv_secret: {0}'.format(_error_text))
+            raise ValueError(_error_text)
 
         try:
             secret_kv = self.client.read(path="secret/{0}".format(secret))
             if not isinstance(secret_kv, dict):
-                raise ValueError('Unable to read secret "{0}".'.format(str(secret)))
+                _error_text = 'Unable to read secret "{0}".'.format(str(secret))
+                logging.error('ERROR: VaultServer.py: read_kv_secret: {0}'.format(_error_text))
+                raise ValueError(_error_text)
             secret_data = secret_kv.get('data', None)
             secret_value = secret_data.get('value', None)
             if secret_value is not None:
                 return secret_value
             else:
-                raise ValueError('Secret {0} is not defined.'.format(secret))
+                _error_text = 'Secret {0} is not defined.'.format(secret)
+                logging.error('ERROR: VaultServer.py: read_kv_secret: {0}'.format(_error_text))
+                raise ValueError(_error_text)
         except hvac.exceptions.Forbidden as f:
+            _error_text = '** SECURITY LOG ** Forbidden. Permission Denied!'
+            logging.error(_error_text)
             raise
 
     def authenticate(self, token=None, wrapped_token=None):
@@ -107,10 +117,9 @@ class VaultServer:
             try:
                 temp_unwrap = self.client.unwrap('{0}'.format(wrapped_token))
             except hvac.exceptions.Forbidden as f:
-                self._log.log(
-                    'Unable to unwrap Token!! Token: {0}. Error: {1}.'.format(wrapped_token, str(f)),
-                    security_related=True
-                )
+                _error_text = '** SECURITY LOG ** ' + \
+                              'Unable to unwrap Token!! Token: {0}. Error: {1}.'.format(wrapped_token, str(f))
+                logging.error(_error_text)
                 raise
 
             if temp_unwrap is None:
@@ -121,8 +130,10 @@ class VaultServer:
         _token = _auth.get('client_token', None)
         self._accessor = _auth.get('accessor', None)
         if _auth is None or _token is None:
+            _error_text = 'The unwrapped value is not an authentication token.'
+            logging.error(_error_text)
             # Logger.log(temp_unwrap, security_related=True)
-            raise ValueError('The unwrapped value is not an authentication token.')
+            raise ValueError(_error_text)
 
         try:
             self.client = hvac.Client(url=self.fqdn, token=_token)
