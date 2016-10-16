@@ -3,11 +3,13 @@ import hvac
 import requests.exceptions
 import argparse
 import logging
+from logging.config import fileConfig
 from packages.VaultServer import VaultServer
 
 wrapped = None
 auth = None
 vault = None
+fileConfig('logging_config.ini')
 logging.basicConfig(
     filename='vault-demo.log',
     level=logging.INFO,

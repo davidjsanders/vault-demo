@@ -8,6 +8,7 @@ __pycache__/
 .idea/*.xml
 .idea/*.iml
 *.json
+*.ini
 
 # C extensions
 *.so
@@ -93,3 +94,4 @@ ENV/
 
 # Rope project settings
 .ropeproject
+/.gitignore
