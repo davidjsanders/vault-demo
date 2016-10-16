@@ -1,10 +1,14 @@
 from datetime import datetime, timezone
 import time
+import os
 
 
 class Logger(object):
-    def __init__(self):
-        pass
+    _filename = "vault-demo.log"
+
+    def __init__(self, filename=None):
+        if filename is not None:
+            self._filename = filename
 
     @staticmethod
     def log(text, security_related=False):
@@ -17,8 +21,10 @@ class Logger(object):
     def security_log(text):
         event_time = datetime.utcnow()
         local_time = event_time.replace(tzinfo=timezone.utc).astimezone(tz=None)
-        print('**')
-        print('** SECURITY LOG UTC Date:', event_time)
-        print('** SECURITY LOG Local   :', local_time, time.tzname)
-        print('** SECURITY LOG Message : {0}'.format(text))
-        print('**')
+        output_text = \
+            "**\n" + \
+            "** SECURITY LOG UTC Date: {0}".format(event_time) + "\n" + \
+            "** SECURITY LOG Local   :".format(local_time, time.tzname) + "\n" + \
+            "** SECURITY LOG Message : {0}".format(text) + "\n" + \
+            "**"
+        print(output_text)
