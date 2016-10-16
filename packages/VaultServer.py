@@ -42,13 +42,18 @@ class VaultServer:
 
     @property
     def fqdn(self):
-        return "{0}://{1}.{2}.{3}:{4}".format(
+        return "{0}://{1}:{2}".format(
             self.vault_information["protocol"],
             self.vault_information["name"],
-            self.vault_information["location"],
-            self.vault_information["service"],
             self.vault_information["port"]
         )
+#        return "{0}://{1}.{2}.{3}:{4}".format(
+#            self.vault_information["protocol"],
+#            self.vault_information["name"],
+#            self.vault_information["location"],
+#            self.vault_information["service"],
+#            self.vault_information["port"]
+#        )
 
     @property
     def token(self):
