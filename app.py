@@ -68,7 +68,7 @@ except hvac.exceptions.Forbidden as f:
     Logger.log(
         'Unable to read secret. '+
             'Token {0} returns permission denied!'.format(
-                vault.accessor if vault.accessor is not None else 'is null, so '
+                vault.accessor if vault.accessor is not None else 'is null, so'
             ),
         security_related=True
     )
