@@ -101,10 +101,7 @@ if _auth_file is not None:
 vault = VaultServer(name=_server, port=_port)
 
 try:
-    if wrapped is not None:
-        vault.authenticate(wrapped_token=wrapped)
-    else:
-        vault.authenticate(token=auth)
+    vault.authenticate(wrapped_token=_wrapped)
 except requests.ConnectionError as ce:
     Logger.log('A connection error occurred; is the vault server information correct?')
     exit(1)
