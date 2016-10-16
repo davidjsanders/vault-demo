@@ -19,6 +19,12 @@ parser.add_argument(
     default=None,
     help='Pass the filename of a JSON file containing authentication tokens (wrapped or unwrapped).'
 )
+parser.add_argument(
+    '--server',
+    dest='server',
+    default=None,
+    help='Pass the Vault server name (or FQDN).'
+)
 args = parser.parse_args()
 
 try:
