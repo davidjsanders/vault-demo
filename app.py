@@ -9,7 +9,14 @@ from packages.VaultServer import VaultServer
 wrapped = None
 auth = None
 vault = None
-fileConfig('logging_config.ini')
+try:
+    fileConfig('logging_config.ini')
+except:
+    logging.basicConfig(
+        filename='vault.log',
+        level=logging.INFO,
+        format='%(asctime)s %(message)s'
+    )
 
 parser = argparse.ArgumentParser(description='Process optional tokens')
 parser.add_argument(
