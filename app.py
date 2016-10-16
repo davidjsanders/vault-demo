@@ -65,4 +65,8 @@ try:
 except ValueError as ve:
     Logger.log(ve)
 except hvac.exceptions.Forbidden as f:
-    Logger.log('Unable to read secret because permission is denied! Un-authenticated!', security_related=True)
+    Logger.log(
+        'Unable to read secret. '+
+            'Token {0} returns permission denied!'.format(vault.accessor),
+        security_related=True
+    )

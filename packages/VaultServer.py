@@ -13,6 +13,7 @@ class VaultServer:
     }
     _client = None
     _token = None
+    _accessor = None
     _wrapped_token = None
 
     def __init__(
@@ -56,6 +57,10 @@ class VaultServer:
         return return_string
 
     @property
+    def accessor(self):
+        return self._accessor
+
+    @property
     def token(self):
         return self.vault_information["token"]
 
@@ -96,6 +101,7 @@ class VaultServer:
 
         if token is not None:
             _auth = {"client_token":token}
+            _accessor = {"accessor"}
         else:
             temp_unwrap = None
             try:
