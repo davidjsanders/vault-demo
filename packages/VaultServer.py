@@ -107,10 +107,10 @@ class VaultServer:
             try:
                 temp_unwrap = self.client.unwrap('{0}'.format(wrapped_token))
             except hvac.exceptions.Forbidden as f:
-                # Logger.log(
-                #     'Unable to unwrap Token!! Token: {0}. Error: {1}.'.format(wrapped_token, str(f)),
-                #     security_related=True
-                # )
+                Logger.log(
+                    'Unable to unwrap Token!! Token: {0}. Error: {1}.'.format(wrapped_token, str(f)),
+                    security_related=True
+                )
                 raise
 
             if temp_unwrap is None:
