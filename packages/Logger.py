@@ -34,6 +34,7 @@ class Logger(object):
         self._file_writer(output_text)
 
     def _file_writer(self, text=None):
+        f = None
         try:
             f = open(Logger._log_directory + '/' + self._filename, 'a')
             f.write(text)
