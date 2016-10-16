@@ -13,17 +13,26 @@ parser.add_argument(
     default=None,
     help='Pass the Vault authentication token via the command line.'
 )
+parser.add_argument(
+    '--wrapped-token',
+    dest='wrapped_token',
+    default=None,
+    help='Pass the Vault wrapped authentication token via the command line.'
+)
 args = parser.parse_args()
 
 try:
     if args.token is None:
-        f = open('authentication_file.json', 'r')
-        _auth_dict = json.load(f)
-        if 'auth' in _auth_dict:
-            auth = _auth_dict['auth']
-        elif 'wrapped' in _auth_dict:
-            wrapped = _auth_dict['wrapped']
-        f.close()
+        if args.wrapped_token is None:
+            f = open('authentication_file.json', 'r')
+            _auth_dict = json.load(f)
+            if 'auth' in _auth_dict:
+                auth = _auth_dict['auth']
+            elif 'wrapped' in _auth_dict:
+                wrapped = _auth_dict['wrapped']
+            f.close()
+        else:
+            wrapped = args.wrapped_token
     else:
         auth = args.token
         wrapped = None
