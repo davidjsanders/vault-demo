@@ -41,12 +41,12 @@ class VaultServer:
             raise
 
     @property
-    def fqdn(self, short=True):
+    def fqdn(self, azure=False):
         return_string = "{0}://{1}:{2}".format(
             self.vault_information["protocol"],
             self.vault_information["name"],
             self.vault_information["port"]
-        ) if short else "{0}://{1}.{2}.{3}:{4}".format(
+        ) if not azure else "{0}://{1}.{2}.{3}:{4}".format(
             self.vault_information["protocol"],
             self.vault_information["name"],
             self.vault_information["location"],
