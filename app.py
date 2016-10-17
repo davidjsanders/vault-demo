@@ -47,6 +47,7 @@ parser.add_argument(
 parser.add_argument(
     '--debug',
     dest='debug',
+    action='store_true',
     default=False,
     help='Display debug messages during execution.'
 )
