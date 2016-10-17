@@ -44,13 +44,23 @@ parser.add_argument(
     default=8200,
     help='Pass the Vault server port number (default 8200)'
 )
+parser.add_argument(
+    '--debug',
+    dest='debug',
+    default=False,
+    help='Display debug messages during execution.'
+)
 args = parser.parse_args()
 _wrapped = args.wrapped_token
 _server = args.server
 _port = args.port
 _auth_file = args.auth_file
+_debug = args.debug
 
 # Check if a port number has been passed as a parameter
+if _debug:
+    logging.log('Checking port is properly defined.')
+
 if _port is not None:
     _success = False
     try:
@@ -69,9 +79,14 @@ if _port is not None:
 
     if _port < 1:
         raise ValueError('Port number, if provided, must be greater than zero or None.')
+    if _debug:
+        logging.log('Port IS properly defined.')
 
 # Check if an auth file has been passed and that it exists
 if _auth_file is not None:
+    if _debug:
+        logging.log('Checking authentication file is properly defined.')
+
     if not isinstance(_auth_file, str):
         raise ValueError('Auth file, if provided, must be a filename (i.e. a string).')
     _auth_file_handle = None
@@ -90,6 +105,8 @@ if _auth_file is not None:
         raise fnf_error
     t_auth = json.load(_auth_file_handle)
     _auth_file_handle.close()
+    if _debug:
+        logging.log('Authentication file was found and opened.')
 
     _wrapped = t_auth.get('wrapped-token', None)
     if _wrapped is None:
@@ -99,6 +116,8 @@ if _auth_file is not None:
 
         logging.error(_error_text)
         raise ValueError(_error_text)
+    if _debug:
+        logging.log('Authentication file was valid.')
 
 vault = VaultServer(name=_server, port=_port)
 
