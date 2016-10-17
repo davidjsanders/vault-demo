@@ -57,6 +57,7 @@ _port = args.port
 _auth_file = args.auth_file
 _debug = args.debug
 
+logging.debug('--- PROGRAM START ---')
 if _debug:
     logging.getLogger().setLevel(logging.DEBUG)
 
@@ -149,4 +150,4 @@ except hvac.exceptions.Forbidden as f:
     logging.error(_error_text)
     raise
 
-logging.debug('Program ends.')
+logging.debug('--- PROGRAM ENDS ---')
