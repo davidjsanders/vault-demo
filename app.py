@@ -34,7 +34,6 @@ parser.add_argument(
 parser.add_argument(
     '-s', '--server',
     dest='server',
-    required=True,
     default=None,
     help='Pass the Vault server name (or FQDN).'
 )
