@@ -26,8 +26,6 @@ class VaultServer:
         port=8200
     ):
         if name is None \
-            or location is None\
-            or service is None\
             or (port is None or not isinstance(port, int) or port < 1024)\
             or protocol is None:
                 raise ValueError('Vault instantiation is badly formed.')
