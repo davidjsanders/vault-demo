@@ -59,7 +59,7 @@ _debug = args.debug
 
 if _debug:
     logging.getLogger().setLevel(logging.DEBUG)
-logging.debug('--- PROGRAM START ---')
+logging.debug('--- DEBUG START ---')
 
 # Check if a port number has been passed as a parameter
 logging.debug('Checking port is properly defined.')
@@ -150,4 +150,4 @@ except hvac.exceptions.Forbidden as f:
     logging.error(_error_text)
     raise
 
-logging.debug('--- PROGRAM ENDS ---')
+logging.debug('--- DEBUG ENDS ---')
