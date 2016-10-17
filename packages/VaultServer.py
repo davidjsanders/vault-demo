@@ -20,10 +20,10 @@ class VaultServer:
     def __init__(
         self,
         name=None,
-        location="eastus",
-        service="cloudapp.azure.com",
+        location=None,
+        service=None,
         protocol="http",
-        port=18200
+        port=8200
     ):
         if name is None \
             or location is None\
