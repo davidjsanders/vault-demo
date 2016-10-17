@@ -57,9 +57,9 @@ _port = args.port
 _auth_file = args.auth_file
 _debug = args.debug
 
-logging.debug('--- PROGRAM START ---')
 if _debug:
     logging.getLogger().setLevel(logging.DEBUG)
+logging.debug('--- PROGRAM START ---')
 
 # Check if a port number has been passed as a parameter
 logging.debug('Checking port is properly defined.')
