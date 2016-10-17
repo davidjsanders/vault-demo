@@ -26,26 +26,26 @@ parser.add_argument(
     help='Pass the Vault wrapped authentication token via the command line.'
 )
 parser.add_argument(
-    '--auth-file',
+    '-a', '--auth-file',
     dest='auth_file',
     default=None,
     help='Pass the filename of a JSON file containing authentication tokens (wrapped or unwrapped).'
 )
 parser.add_argument(
-    '--server',
+    '-s', '--server',
     dest='server',
     required=True,
     default=None,
     help='Pass the Vault server name (or FQDN).'
 )
 parser.add_argument(
-    '--port',
+    '-p', '--port',
     dest='port',
     default=8200,
     help='Pass the Vault server port number (default 8200)'
 )
 parser.add_argument(
-    '--debug',
+    '-d', '--debug',
     dest='debug',
     action='store_true',
     default=False,
