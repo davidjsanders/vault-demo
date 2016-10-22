@@ -138,6 +138,8 @@ logging.debug('Authentication succeeded. Fetching value "foo"')
 try:
     foo = vault.read_kv_secret(secret='foo')
     print('foo: {0}'.format(foo))
+    foo2 = vault.read_kv_secret(secret='foo2')
+    print('foo2: {0}'.format(foo2))
 except ValueError as ve:
     logging.error(ve)
     raise
